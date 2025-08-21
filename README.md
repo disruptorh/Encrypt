@@ -1,2 +1,2 @@
 # Encrypt
-Una sencilla aplicación web para cifrar y descifrar texto utilizando varios algoritmos. La interfaz es fácil de usar y se ejecuta localmente en tu navegador
+A simple web application for encrypting and decrypting text using various algorithms. The interface is easy to use and runs locally in your browser
