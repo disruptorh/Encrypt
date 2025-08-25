@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id" content="879785792270-u3fneofgm8351ods5e17ed0fi57tknpk.apps.googleusercontent.com">
+    <title>Cifrador de Archivos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- BARRA LATERAL IZQUIERDA (LLAvero) RESTAURADA -->
+        <div class="password-sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-key"></i> Llavero</h3>
+                <button id="import-key-btn" title="Importar archivos de clave"><i class="fas fa-file-import"></i></button>
+                <button id="backup-keychain-btn" title="Descargar Bóveda Cifrada"><i class="fas fa-download"></i></button>
+            </div>
+            <ul id="password-list" class="password-list">
+                <!-- Las contraseñas guardadas aparecerán aquí -->
+            </ul>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="app-layout">
+            <div class="container">
+                <div class="header">
+                    <h1><i class="fas fa-lock"></i> Cifrador de Archivos</h1>
+                    <div class="header-buttons">
+                        <button id="restore-keychain-btn"><i class="fas fa-upload"></i> Restaurar Bóveda</button>
+                        <button id="importBtn"><i class="fas fa-file-import"></i> Cargar Archivo</button>
+                        <button id="exportBtn"><i class="fas fa-file-export"></i> Descargar Resultado</button>
+                    </div>
+                </div>
+                
+                <input type="file" id="fileInput" hidden>
+                <input type="file" id="backup-file-input" hidden accept=".vault">
+                <input type="file" id="import-key-input" hidden multiple>
+        
+                <div class="password-selection-counter">
+                    <span id="password-counter">0</span> contraseñas seleccionadas para esta operación
+                </div>
+                <div class="text-areas">
+                    <textarea id="inputText" placeholder="Escribe aquí para cifrar/descifrar texto plano..."></textarea>
+                    <textarea id="outputText" placeholder="El resultado del texto plano aparecerá aquí..." readonly></textarea>
+                </div>
+                
+                <div id="file-processing-area" class="file-processing-area" style="display: none;">
+                    <p>Archivo cargado: <span id="loaded-file-name"></span></p>
+                    <p>El resultado será un archivo descargable.</p>
+                </div>
+
+                <div class="controls-container">
+                    <div id="shift-container" class="shift-container" style="display: none;">
+                        <label for="shift">Rotación:</label>
+                        <input type="number" id="shift" value="13" min="1" max="25">
+                        <label for="rounds">Vueltas:</label>
+                        <input type="number" id="rounds" value="1" min="1">
+                    </div>
+                    <div id="fernet-key-container" class="fernet-key-container" style="display: none;">
+                        <input type="text" id="fernet-key" placeholder="Ingresa la clave Fernet (opcional al cifrar)">
+                    </div>
+                    <div class="password-wrapper" style="display: flex;">
+                        <div class="password-container">
+                            <input type="password" id="password" placeholder="Ingresa una contraseña para usar o guardar..." autocomplete="new-password">
+                            <span id="togglePassword" class="eye-icon">
+                                <i id="eye-open" class="fas fa-eye"></i>
+                                <i id="eye-closed" class="fas fa-eye-slash" style="display: none;"></i>
+                            </span>
+                            <div class="password-strength-container">
+                                <div id="password-strength-bar" class="strength-bar"></div>
+                            </div>
+                        </div>
+                        <button id="save-password-btn" class="save-btn" title="Guardar/Actualizar en Llavero"><i class="fas fa-save"></i></button>
+                        <button id="generate-password-btn" class="generate-btn" title="Generar Contraseña Segura"><i class="fas fa-key"></i></button>
+                    </div>
+                </div>
+        
+                <div class="bottom-buttons">
+                    <div class="button-group-left">
+                        <button id="copyBtn"><i class="fas fa-copy"></i> Copiar Salida</button>
+                        <button id="encryptBtn"><i class="fas fa-shield-alt"></i> Cifrar</button>
+                        <button id="decryptBtn"><i class="fas fa-unlock-alt"></i> Descifrar</button>
+                        <button id="recoverBtn" title="Descifrar usando una clave de recuperación"><i class="fas fa-magic"></i> Recuperar</button>
+                    </div>
+                    <div class="button-group-right">
+                        <button id="shutdown-btn" class="shutdown-btn" title="Cerrar Aplicación"><i class="fas fa-power-off"></i></button>
+                        <button id="clearBtn"><i class="fas fa-trash"></i> Limpiar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BARRA LATERAL DERECHA (Configuración e Identidad) -->
+            <div class="sidebar-container">
+                <div id="settings-section" class="sidebar-panel">
+                    <div class="method-container">
+                        <label for="method"><i class="fas fa-cog"></i> Método:</label>
+                        <select id="method">
+                            <option value="aes_gpu">AES-GPU ★★★★★★</option>
+                            <option value="aes">AES-256 ★★★★★</option>
+                            <option value="fernet">Fernet ★★★★☆</option>
+                            <option value="vigenere">César Avanzado ★★★☆☆</option>
+                            <option value="vigenere_extended">Vigenère Extendido ★★★☆☆</option>
+                            <option value="base64">Base64 ★☆☆☆☆</option>
+                            <option value="caesar">Cifrado César ★☆☆☆☆</option>
+                        </select>
+                    </div>
+                    <div id="algorithm-warning" class="algorithm-warning"></div>
+                    <div id="decryption-indices-container" class="decryption-indices-container">
+                        <h3><i class="fas fa-info-circle"></i> Índices de Descifrado Manual</h3>
+                        <p id="decryption-instructions">Selecciona un algoritmo para ver las instrucciones.</p>
+                        <a href="/indices" target="_blank" class="indices-link" id="indices-link" style="display: none;">Ver Tabla de Índices de Caracteres</a>
+                    </div>
+                </div>
+
+                <div id="identity-section" class="sidebar-panel">
+                    <div class="google-signin-container">
+                        <h4><i class="fas fa-user-shield"></i> Recuperación por Identidad</h4>
+                        <div id="g_id_onload"
+                             data-client_id="879785792270-u3fneofgm8351ods5e17ed0fi57tknpk.apps.googleusercontent.com"
+                             data-callback="onSignIn"
+                             data-auto_prompt="false">
+                        </div>
+                        <div class="g_id_signin"
+                             data-type="standard"
+                             data-size="large"
+                             data-theme="outline"
+                             data-text="sign_in_with"
+                             data-shape="rectangular"
+                             data-logo_alignment="left">
+                        </div>
+                        <div id="google-user-info" style="display: none;">
+                            <p>Conectado como: <strong id="google-user-name"></strong></p>
+                            <button id="google-signout-btn">Cerrar Sesión</button>
+                        </div>
+                        <div id="google-user-id-container" style="display: none;">
+                            <label for="google-user-id">Tu ID de Usuario (compartible):</label>
+                            <div class="user-id-wrapper">
+                                <input type="text" id="google-user-id" readonly="">
+                                <button id="copy-user-id-btn" title="Copiar ID de Usuario"><i class="fas fa-copy"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="identity-instructions">
+                        <p><i class="fas fa-info-circle"></i> ¿Cómo funciona la recuperación?</p>
+                        <ul>
+                            <li><b>Cifrado:</b> Al cifrar con la sesión iniciada, tu ID de Google se adjunta de forma segura.</li>
+                            <li><b>Recuperación:</b> Cualquiera que tenga el archivo puede usar el botón "Recuperar" si ha iniciado sesión con la misma cuenta de Google.</li>
+                            <li><b>Compartir:</b> Pega el ID de Google del destinatario antes de cifrar. Solo él y tú podréis recuperar el archivo.</li>
+                        </ul>
+                    </div>
+
+                    <div class="recipient-container">
+                        <h4><i class="fas fa-user-plus"></i> Compartir (Opcional)</h4>
+                        <input type="text" id="recipient-id-input" placeholder="Pegar ID de usuario del destinatario...">
+                    </div>
+                </div>
+
+                <div class="sidebar-toggles">
+                    <button id="settings-toggle-btn" class="sidebar-toggle" title="Configuración">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button id="identity-toggle-btn" class="sidebar-toggle" title="Identidad y Compartir">
+                        <i class="fas fa-user-shield"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="drag-overlay" class="drag-overlay">
+        <div class="drag-overlay-content">
+            <i class="fas fa-file-upload"></i>
+            <p>Suelta el archivo para cargarlo</p>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Texto copiado al portapapeles</div>
+    
+    <div id="recovery-key-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-recovery-modal-btn" class="close-btn">&times;</span>
+            <h2><i class="fas fa-check-circle"></i> Cifrado Exitoso</h2>
+            <p>Tu clave de recuperación se ha generado. Guárdala en un lugar seguro. <strong>Si la pierdes, no podrás recuperar tus datos sin la contraseña original.</strong></p>
+            <div class="modal-password-container">
+                <input type="text" id="recovery-key-output" readonly>
+                <button id="copy-recovery-key-btn"><i class="fas fa-copy"></i> Copiar</button>
+            </div>
+            <a href="#" id="send-recovery-email-btn" class="button-like-link"><i class="fas fa-envelope"></i> Enviar a mi Correo</a>
+        </div>
+    </div>
+
+    <div id="master-password-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-master-password-modal-btn" class="close-btn">&times;</span>
+            <h2 id="master-password-title">Desbloquear Llavero</h2>
+            <p id="master-password-instructions">Ingresa tu contraseña maestra para acceder a tus claves guardadas. Si es la primera vez, esta será la contraseña para tu nueva bóveda.</p>
+            <div class="modal-password-container">
+                <div class="password-container">
+                    <input type="password" id="master-password-input" placeholder="Ingresa la contraseña maestra..." autocomplete="new-password">
+                    <span id="toggle-master-password" class="eye-icon">
+                        <i class="fas fa-eye"></i>
+                        <i class="fas fa-eye-slash" style="display: none;"></i>
+                    </span>
+                </div>
+                <button id="generate-master-password-btn" class="generate-btn" title="Generar Contraseña Segura"><i class="fas fa-key"></i></button>
+            </div>
+            <button id="confirm-master-password-btn">Confirmar</button>
+        </div>
+    </div>
+
+    <div id="backup-password-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-backup-modal-btn" class="close-btn">&times;</span>
+            <h2 id="backup-modal-title">Contraseña del Backup</h2>
+            <p id="backup-modal-instructions"></p>
+            <div class="modal-password-container">
+                <div class="password-container">
+                    <input type="password" id="backup-password-input" placeholder="Ingresa la contraseña maestra...">
+                    <span id="toggleBackupPassword" class="eye-icon">
+                        <i class="fas fa-eye"></i>
+                        <i class="fas fa-eye-slash" style="display: none;"></i>
+                    </span>
+                </div>
+                <button id="generate-backup-password-btn" class="generate-btn" title="Generar Contraseña Segura"><i class="fas fa-key"></i></button>
+            </div>
+            <button id="confirm-backup-action-btn">Confirmar</button>
+        </div>
+    </div>
+
+    <div id="edit-password-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-edit-modal-btn" class="close-btn">&times;</span>
+            <h2 id="edit-modal-title">Editar Contraseña</h2>
+            <textarea id="edit-password-textarea"></textarea>
+            <button id="save-edited-password-btn">Guardar Cambios</button>
+        </div>
+    </div>
+
+    <div id="password-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2><i class="fas fa-check-circle"></i> Contraseña Segura Generada</h2>
+            <div class="modal-password-container">
+                <input type="text" id="generated-password" readonly>
+                <button id="copy-generated-password-btn"><i class="fas fa-copy"></i> Copiar</button>
+            </div>
+            <button id="regenerate-password-btn"><i class="fas fa-sync-alt"></i> Volver a generar</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

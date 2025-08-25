@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Índices de Caracteres</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #ffffff;
+        }
+        table {
+            width: 95%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+        }
+        th, td {
+            border: 1px solid #555;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        td {
+            background-color: #0e0e0e;
+            color: #ffffff;
+        }
+        /* Estilo para las celdas de índice (columnas pares) */
+        td:nth-child(2n) {
+            background-color: #ffffff;
+            color: #000000;
+            font-weight: bold;
+        }
+        tr:nth-child(even) td {
+            background-color: #141414;
+        }
+        tr:nth-child(even) td:nth-child(2n) {
+            background-color: #f2f2f2;
+            color: #000000;
+        }
+        .example-btn {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 12px 20px;
+            border: 1px solid #555;
+            color: white;
+            background-color: #222;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            text-align: center;
+        }
+        .example-btn:hover {
+            background-color: #333;
+        }
+        .modal {
+            display: none;
+            position: absolute;
+            z-index: 10;
+            background-color: #1f1f1f;
+            border: 1px solid #555;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+            width: 400px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .modal-header {
+            padding: 15px;
+            cursor: move;
+            background-color: #2a2a2a;
+            color: white;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+        .modal-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .minimize-btn {
+            font-size: 28px;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .close-btn, .minimize-btn {
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .close-btn:hover, .minimize-btn:hover {
+            color: #fff;
+        }
+        .modal.minimized .modal-content {
+            display: none;
+        }
+        .modal-content {
+            padding: 20px;
+        }
+        .modal-content label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        .modal-content input, .modal-content button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background-color: #000000;
+            color: #ffffff;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .modal-content button {
+            background-color: #007bff;
+            border-color: #007bff;
+            cursor: pointer;
+        }
+        .modal-content button:hover {
+            background-color: #0056b3;
+        }
+        #modal-result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #000;
+            border: 1px solid #444;
+            border-radius: 5px;
+            min-height: 40px;
+            word-wrap: break-word;
+        }
+        #password-hint {
+            font-style: italic;
+            color: #aaa;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        .button-group button {
+            flex: 1;
+        }
+        #start-challenge-btn {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        #start-challenge-btn:hover {
+            background-color: #218838;
+        }
+        #step-by-step-container {
+            margin-top: 20px;
+            border-top: 1px solid #444;
+            padding-top: 15px;
+        }
+        #step-by-step-container h4 {
+            margin: 0 0 10px 0;
+            color: #ffffff;
+        }
+        #step-by-step-output {
+            background-color: #000;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 10px;
+            min-height: 100px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        #modal-result, #step-by-step-output {
+            max-height: 150px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tabla de Índices para Cifrado César Avanzado</h1>
+    <button class="example-btn" id="open-modal-btn">Ver Ejemplos</button>
+
+    <div id="example-modal" class="modal">
+        <div class="modal-header" id="modal-header">
+            <h2>Ejemplo Interactivo</h2>
+            <div class="modal-controls">
+                <span class="minimize-btn" id="minimize-modal-btn">-</span>
+                <span class="close-btn" id="close-modal-btn">&times;</span>
+            </div>
+        </div>
+        <div class="modal-content">
+            <label for="modal-text">Texto:</label>
+            <input type="text" id="modal-text" placeholder="Escribe algo...">
+            <label for="modal-password">Contraseña: <span id="password-hint"></span></label>
+            <input type="text" id="modal-password" placeholder="Tu clave secreta...">
+            <div class="button-group">
+                <button id="modal-encrypt-btn">Cifrar</button>
+                <button id="modal-decrypt-btn">Descifrar</button>
+            </div>
+            <button id="start-challenge-btn">Nuevo Desafío</button>
+            <label>Resultado:</label>
+            <div id="modal-result"></div>
+            <div id="step-by-step-container">
+                <h4>Visualización Paso a Paso:</h4>
+                <div id="step-by-step-output"></div>
+            </div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Carácter</th>
+                <th>Índice</th>
+                <th>Carácter</th>
+                <th>Índice</th>
+                <th>Carácter</th>
+                <th>Índice</th>
+                <th>Carácter</th>
+                <th>Índice</th>
+                <th>Carácter</th>
+                <th>Índice</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set columns = 5 %}
+            {% for i in range(0, (charset|length + columns - 1) // columns) %}
+            <tr>
+                {% for j in range(columns) %}
+                    {% set index = i * columns + j %}
+                    {% if index < (charset|length) %}
+                        <td>{{ charset[index] }}</td>
+                        <td>{{ index }}</td>
+                    {% else %}
+                        <td></td><td></td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        const VIGENERE_CHARSET = JSON.parse('{{ charset|tojson|safe }}');
+
+        const challenges = [
+            { encrypted: "L)6p", password: "gato", hint: "Un animal doméstico de 4 letras" },
+            { encrypted: "w7c", password: "sol", hint: "La estrella de nuestro sistema" },
+            { encrypted: "T4'p+*1", password: "codigo", hint: "Lo que escriben los programadores" },
+            { encrypted: "6?p<*1", password: "secreto", hint: "Algo que no se cuenta" }
+        ];
+
+        function vigenereCipherWithSteps(text, password, encrypt = true) {
+            if (!password) return { result: "Por favor, introduce una contraseña.", steps: [] };
+            
+            const key = password.repeat(Math.ceil(text.length / password.length)).slice(0, text.length);
+            let result = "";
+            let steps = [];
+            let key_idx = 0;
+
+            for (const char of text) {
+                if (VIGENERE_CHARSET.includes(char)) {
+                    const text_val = VIGENERE_CHARSET.indexOf(char);
+                    const key_char = key[key_idx];
+                    const key_val = VIGENERE_CHARSET.indexOf(key_char);
+                    
+                    let final_val;
+                    let step_calculation;
+                    if (encrypt) {
+                        final_val = (text_val + key_val) % VIGENERE_CHARSET.length;
+                        step_calculation = `(${text_val} + ${key_val}) % ${VIGENERE_CHARSET.length} = ${final_val}`;
+                    } else {
+                        final_val = (text_val - key_val + VIGENERE_CHARSET.length) % VIGENERE_CHARSET.length;
+                        step_calculation = `(${text_val} - ${key_val} + ${VIGENERE_CHARSET.length}) % ${VIGENERE_CHARSET.length} = ${final_val}`;
+                    }
+                    
+                    const result_char = VIGENERE_CHARSET[final_val];
+                    steps.push(`'${char}' (${text_val}) & '${key_char}' (${key_val}) => ${step_calculation} => '${result_char}'`);
+                    result += result_char;
+                    key_idx++;
+                } else {
+                    steps.push(`'${char}' se mantiene sin cambios.`);
+                    result += char;
+                }
+            }
+            return { result, steps };
+        }
+
+        const modal = document.getElementById('example-modal');
+        const openBtn = document.getElementById('open-modal-btn');
+        const closeBtn = document.getElementById('close-modal-btn');
+        const minimizeBtn = document.getElementById('minimize-modal-btn');
+        const header = document.getElementById('modal-header');
+
+        openBtn.onclick = () => modal.style.display = 'block';
+        closeBtn.onclick = () => modal.style.display = 'none';
+        
+        minimizeBtn.addEventListener('click', () => {
+            modal.classList.toggle('minimized');
+            const isMinimized = modal.classList.contains('minimized');
+            minimizeBtn.textContent = isMinimized ? '□' : '-';
+        });
+
+        window.onclick = (event) => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
+
+        let isDragging = false;
+        let offset = { x: 0, y: 0 };
+
+        header.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            offset.x = e.clientX - modal.offsetLeft;
+            offset.y = e.clientY - modal.offsetTop;
+            header.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            modal.style.left = `${e.clientX - offset.x}px`;
+            modal.style.top = `${e.clientY - offset.y}px`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            header.style.cursor = 'move';
+        });
+
+        const textInput = document.getElementById('modal-text');
+        const passwordInput = document.getElementById('modal-password');
+        const resultDiv = document.getElementById('modal-result');
+        const stepByStepOutput = document.getElementById('step-by-step-output');
+        const passwordHint = document.getElementById('password-hint');
+
+        document.getElementById('start-challenge-btn').addEventListener('click', () => {
+            const challenge = challenges[Math.floor(Math.random() * challenges.length)];
+            textInput.value = challenge.encrypted;
+            passwordHint.textContent = `(Pista: ${challenge.hint})`;
+            passwordInput.value = '';
+            resultDiv.textContent = '';
+            stepByStepOutput.innerHTML = '';
+        });
+
+        document.getElementById('modal-encrypt-btn').addEventListener('click', () => {
+            const { result, steps } = vigenereCipherWithSteps(textInput.value, passwordInput.value, true);
+            resultDiv.textContent = result;
+            stepByStepOutput.innerHTML = steps.join('<br>');
+            passwordHint.textContent = '';
+        });
+
+        document.getElementById('modal-decrypt-btn').addEventListener('click', () => {
+            const { result, steps } = vigenereCipherWithSteps(textInput.value, passwordInput.value, false);
+            resultDiv.textContent = result;
+            stepByStepOutput.innerHTML = steps.join('<br>');
+        });
+
+    </script>
+</body>
+</html>

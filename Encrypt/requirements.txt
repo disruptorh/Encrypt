@@ -1,0 +1,13 @@
+cryptography
+Flask
+numpy
+numba
+PyNaCl
+wmi
+pypiwin32
+gunicorn
+google-api-python-client
+google-auth-httplib2
+google-auth
+requests
+

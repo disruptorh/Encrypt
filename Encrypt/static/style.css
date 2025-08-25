@@ -1,0 +1,1032 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    max-width: 1400px;
+    height: 95vh;
+}
+
+.password-sidebar {
+    width: 250px;
+    background-color: #252526;
+    border: 1px solid #333;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.app-layout {
+    display: flex;
+    flex-grow: 1;
+    gap: 15px;
+    height: 100%;
+    min-width: 0;
+}
+
+.container {
+    background: #1f1f1f;
+    padding: 25px;
+    border-radius: 10px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #333;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Container for the right-side toggles and panels */
+.sidebar-container {
+    display: flex;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+/* Container for the toggle buttons */
+.sidebar-toggles {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Individual toggle buttons */
+.sidebar-toggle {
+    background: #2a2a2d;
+    border: 1px solid #444;
+    color: #ccc;
+    border-radius: 8px;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar-toggle:hover, .sidebar-toggle.active {
+    background-color: #007acc;
+    color: white;
+    border-color: #007acc;
+}
+
+/* Panels that slide out */
+.sidebar-panel {
+    display: none; /* Hidden by default */
+    width: 320px;
+    height: 100%;
+    background: #1f1f1f;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.sidebar-panel.visible {
+    display: block;
+}
+
+.algorithm-warning {
+    color: #ffc107;
+    font-size: 12px;
+    margin-top: 10px;
+    padding: 8px;
+    background-color: rgba(255, 193, 7, 0.1);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+.decryption-indices-container {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #333;
+}
+
+.decryption-indices-container h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.decryption-indices-container h3 i {
+    margin-right: 8px;
+}
+
+.decryption-indices-container p {
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.6;
+    white-space: pre-wrap; /* Para respetar saltos de línea y formato */
+}
+
+.indices-link {
+    display: block;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #00aaff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.indices-link:hover {
+    color: #0077cc;
+    text-decoration: underline;
+}
+
+/* Hacking Lab Styles */
+.hacking-lab-container {
+    background: #1a1a1a;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.1);
+    border: 1px solid #550000;
+    margin-top: 20px;
+}
+.hacking-lab-container h2 {
+    color: #ff4d4d;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.hacking-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+#hacking-input {
+    flex: 1;
+    height: 120px;
+    padding: 15px;
+    border: 1px solid #550000;
+    border-radius: 8px;
+    resize: none;
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 15px;
+}
+.hacking-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 250px;
+}
+.hacking-options label {
+    font-size: 14px;
+}
+#max-len-input {
+    width: 100%;
+}
+#start-hack-btn {
+    padding: 10px;
+    border: 1px solid #ff4d4d;
+    color: white;
+    background-color: #b30000;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+#start-hack-btn:hover {
+    background-color: #ff4d4d;
+}
+#start-hack-btn:disabled {
+    background-color: #555;
+    border-color: #777;
+    cursor: not-allowed;
+}
+.hacking-output {
+    background-color: #000;
+    border: 1px solid #550000;
+    border-radius: 8px;
+    padding: 15px;
+    min-height: 50px;
+}
+#hacking-result {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    color: #00ff00;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+/* Main Button Container Styles */
+.main-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+.lab-btn {
+    display: inline-block;
+    padding: 15px 25px;
+    border: 1px solid #550000;
+    color: white;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.1);
+}
+.lab-btn:hover {
+    background-color: #b30000;
+    border-color: #ff4d4d;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 0, 0, 0.2);
+}
+.lab-btn i {
+    margin-right: 10px;
+}
+
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+h1 {
+    color: #ffffff;
+    margin: 0;
+    font-size: 22px;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+h1 i {
+    margin-right: 10px;
+}
+
+.file-processing-area {
+    text-align: center;
+    padding: 20px;
+    border: 2px dashed #333;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background-color: #000;
+    color: #888;
+}
+
+.drag-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.drag-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.drag-overlay-content {
+    text-align: center;
+    color: #fff;
+    font-size: 24px;
+}
+
+.drag-overlay-content i {
+    font-size: 72px;
+    margin-bottom: 20px;
+}
+
+.text-areas {
+    display: flex;
+    gap: 15px;
+    flex-grow: 1;
+    margin-bottom: 15px;
+}
+
+textarea {
+    flex: 1;
+    height: 100%;
+    padding: 15px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    resize: none;
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 15px;
+}
+
+.bottom-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    flex-direction: row-reverse;
+}
+
+.button-group-left, .button-group-right {
+    display: flex;
+    gap: 10px;
+}
+
+.controls-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: auto;
+}
+
+.shift-container, .password-wrapper {
+    flex-grow: 1;
+}
+
+.shift-container {
+    justify-content: flex-end;
+}
+
+.method-container, .shift-container, .password-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #222;
+    padding: 8px;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.fernet-key-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #222;
+    padding: 8px;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+.method-container, .shift-container {
+    margin-bottom: 15px;
+}
+
+select {
+    width: 100%;
+}
+
+.password-wrapper {
+    flex-grow: 1;
+}
+
+select, input[type="number"], input[type="password"], input[type="text"] {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 14px;
+    width: 100%;
+}
+
+.password-container {
+    position: relative;
+    flex-grow: 1;
+}
+
+input[type="password"], input[type="text"]#password {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.eye-icon {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    user-select: none;
+    color: #888;
+}
+
+.password-strength-container {
+    position: absolute;
+    bottom: -7px;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background-color: #333;
+    border-radius: 2.5px;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0;
+    background-color: #ff4d4d; /* Red for weak */
+    border-radius: 2.5px;
+    transition: width 0.3s, background-color 0.3s;
+}
+
+.header-buttons button, .bottom-buttons button, .generate-btn {
+    padding: 8px 12px;
+    border: 1px solid #555;
+    color: white;
+    background-color: #222;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+}
+
+.header-buttons button:hover, .bottom-buttons button:hover, .generate-btn:hover {
+    transform: translateY(-2px);
+    background-color: #333;
+    border-color: #777;
+}
+
+.shutdown-btn {
+    background-color: #c82333 !important;
+    border-color: #dc3545 !important;
+    width: 41px; /* Igual al alto para hacerlo cuadrado */
+    height: 41px;
+    border-radius: 50%; /* Lo hace redondo */
+    margin-left: 15px; /* Separa del botón Limpiar */
+    padding: 8px; /* Ajusta el padding para el ícono */
+}
+
+.shutdown-btn i {
+    margin-right: 0 !important; /* Centra el ícono */
+}
+
+.save-btn, .generate-btn {
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #555;
+}
+
+.save-btn:hover, .generate-btn:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.save-btn {
+    padding: 8px;
+    height: 41px;
+    width: 41px;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.save-btn i {
+    margin-right: 0;
+}
+
+.shutdown-btn:hover {
+    background-color: #e04454 !important;
+}
+
+.header-buttons button i, .bottom-buttons button i {
+    margin-right: 8px;
+    width: 14px;
+    text-align: center;
+}
+
+.generate-btn {
+    padding: 8px;
+    height: 41px;
+    width: 41px;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.generate-btn i {
+    margin-right: 0;
+}
+
+#copyBtn { 
+    background-color: #007bff; 
+    border-color: #007bff;
+}
+#clearBtn { 
+    background-color: #dc3545; 
+    border-color: #dc3545;
+}
+
+#copyBtn:hover { background-color: #0056b3; }
+#clearBtn:hover { background-color: #c82333; }
+
+.toast {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #222;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 16px;
+    position: fixed;
+    z-index: 10;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 30px;
+    opacity: 0;
+    transition: opacity 0.5s, visibility 0.5s;
+    border: 1px solid #444;
+}
+
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 5;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    background-color: #1a1a1a;
+    margin: 15% auto;
+    padding: 25px;
+    border: 1px solid #333;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+}
+
+.modal-content h2 i {
+    color: #ffffff;
+    margin-right: 10px;
+}
+
+.close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #fff;
+    text-decoration: none;
+}
+
+.modal-password-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 10px;
+}
+
+#generated-password {
+    width: 70%;
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.modal-content button {
+    padding: 12px 20px;
+    border: 1px solid #555;
+    color: white;
+    background-color: #222;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+}
+
+.modal-content button:hover {
+    background-color: #333;
+}
+
+.modal-content button i {
+    margin-right: 8px;
+}
+
+/* --- New Keychain and Layout Styles --- */
+
+.sidebar-header {
+    padding: 15px;
+    border-bottom: 1px solid #333;
+    background-color: #333;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 16px;
+    margin-right: auto; /* Pushes the button to the right */
+}
+
+.sidebar-header button {
+    background: none;
+    border: none;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0 5px;
+    transition: color 0.2s;
+}
+
+.sidebar-header button:hover {
+    color: #007acc;
+}
+
+.password-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.password-list-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #333;
+    transition: background-color 0.2s;
+}
+
+.password-list-item:hover {
+    background-color: #333;
+}
+
+.password-list-item.selected {
+    background-color: #007acc;
+    color: white;
+}
+
+.password-list-item input[type="checkbox"] {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.password-name {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.password-actions {
+    display: flex;
+    align-items: center;
+}
+
+.password-actions button {
+    background: none;
+    border: none;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px;
+    margin-left: 5px;
+    transition: color 0.2s;
+}
+
+.password-list-item.selected .password-actions button {
+    color: white;
+}
+
+.password-actions button:hover {
+    color: #007acc;
+}
+
+.password-list-item.selected .password-actions button:hover {
+    color: #b3d9ff;
+}
+
+.password-selection-counter {
+    text-align: center;
+    padding: 5px 0;
+    font-size: 12px;
+    color: #888;
+    background-color: #252526;
+    border-bottom: 1px solid #333;
+}
+
+#edit-password-modal #edit-password-textarea {
+    width: 100%;
+    height: 200px;
+    margin: 15px 0;
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    border: 1px solid #555;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: monospace;
+}
+
+#save-edited-password-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #007acc;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+#save-edited-password-btn:hover {
+    background-color: #005f9e;
+}
+
+/* --- Google Sign-In Styles --- */
+.google-signin-container {
+    border-top: 1px solid #444;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+.google-signin-container h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #f0f0f0;
+}
+
+#google-user-info {
+    display: none; /* Cambiado a 'flex' por JS al iniciar sesión */
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    background-color: #3a3a3a;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+#google-user-info p {
+    margin: 0;
+    font-size: 0.9em;
+}
+
+#google-user-info strong {
+    font-weight: 600;
+}
+
+#google-signout-btn {
+    padding: 5px 10px;
+    font-size: 0.8em;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+
+#google-user-id-container {
+    margin-top: 15px;
+}
+
+#google-user-id-container label {
+    display: block;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    color: #ccc;
+}
+
+.user-id-wrapper {
+    display: flex;
+}
+
+#google-user-id {
+    flex-grow: 1;
+    background-color: #2c2c2c;
+    border: 1px solid #555;
+    color: #ddd;
+    padding: 6px;
+    border-radius: 4px 0 0 4px;
+    font-family: monospace;
+    font-size: 0.85em;
+}
+
+#copy-user-id-btn {
+    padding: 6px 12px;
+    border-radius: 0 4px 4px 0;
+    border: 1px solid #555;
+    border-left: none;
+    background-color: #555;
+    color: white;
+    cursor: pointer;
+}
+
+#copy-user-id-btn:hover {
+    background-color: #666;
+}
+
+.identity-instructions {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(0, 170, 255, 0.1);
+    border: 1px solid rgba(0, 170, 255, 0.2);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #ccc;
+}
+
+.identity-instructions p {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.identity-instructions p i {
+    color: #00aaff;
+    margin-right: 8px;
+}
+
+.identity-instructions ul {
+    list-style-type: none;
+    padding-left: 10px;
+    margin: 0;
+}
+
+.identity-instructions li {
+    position: relative;
+    padding-left: 15px;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.identity-instructions li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #00aaff;
+    font-weight: bold;
+}
+
+.recipient-container {
+    border-top: 1px solid #444;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+.recipient-container h4 {
+    margin-top: 0;
+}
+
+#recipient-id-input {
+    width: 100%;
+    padding: 8px;
+    background-color: #2c2c2c;
+    border: 1px solid #555;
+    color: #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
+/* --- Recovery Option Styles --- */
+
+.recovery-container {
+    padding: 15px;
+    border-top: 1px solid #333;
+    margin-top: 15px;
+}
+
+.recovery-container h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #f0f0f0;
+}
+
+.recovery-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.recovery-option label {
+    margin-left: 8px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+#email-input-container input {
+    width: 100%;
+    padding: 8px;
+    background-color: #1e1e1e;
+    border: 1px solid #555;
+    color: #f0f0f0;
+    border-radius: 5px;
+}
+
+.button-like-link {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    background-color: #2c9a41;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.button-like-link:hover {
+    background-color: #237834;
+}
+
+.button-like-link i {
+    margin-right: 8px;
+}
+
+/* --- Backup Modal Styles --- */
+
+#backup-password-modal .modal-content {
+    max-width: 400px;
+}
+
+#backup-password-modal p {
+    margin-bottom: 15px;
+    color: #ccc;
+    font-size: 14px;
+}
+
+#backup-password-input {
+    width: 100%;
+    padding: 10px;
+    background-color: #1e1e1e;
+    border: 1px solid #555;
+    color: #f0f0f0;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#backup-password-modal .password-container .eye-icon {
+    right: 10px; /* Ajuste específico para el modal */
+}
+
+#confirm-backup-action-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #007acc;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+#confirm-backup-action-btn:hover {
+    background-color: #005f9e;
+}
+
+#identity-toggle-btn {
+    top: 60px; /* Posiciona el nuevo botón debajo del original */
+}
